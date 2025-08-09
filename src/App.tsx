@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import confetti from "canvas-confetti";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import "react-photo-view/dist/react-photo-view.css";
 
 const App = () => {
   const imageList = [
@@ -8,8 +10,6 @@ const App = () => {
     { img: "/pic_3.JPG", title: "Memory 3" },
     { img: "/pic_4.JPG", title: "Memory 4" },
   ];
-
-  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
 
   useEffect(() => {
     confetti({
@@ -47,20 +47,23 @@ const App = () => {
             const topOffsets = ["30%", "10%", "20%", "30%"];
 
             return (
-              <img
-                key={item.img}
-                src={item.img}
-                alt={item.title}
-                onClick={() => setLightboxImg(item.img)}
-                className="absolute w-34 sm:w-48 md:w-60 object-cover rounded-xl shadow-xl border-4 border-white transition-transform duration-300 hover:scale-105"
-                style={{
-                  left: leftOffsets[index],
-                  top: topOffsets[index],
-                  transform: `rotate(${rotations[index]})`,
-                  zIndex: index,
-                  transformOrigin: "center",
-                }}
-              />
+              <PhotoProvider>
+                <PhotoView key={item.img} src={item.img}>
+                  <img
+                    key={item.img}
+                    src={item.img}
+                    alt={item.title}
+                    className="absolute w-34 sm:w-48 md:w-60 object-cover rounded-xl shadow-xl border-4 border-white transition-transform duration-300 hover:scale-105"
+                    style={{
+                      left: leftOffsets[index],
+                      top: topOffsets[index],
+                      transform: `rotate(${rotations[index]})`,
+                      zIndex: index,
+                      transformOrigin: "center",
+                    }}
+                  />
+                </PhotoView>
+              </PhotoProvider>
             );
           })}
         </div>
@@ -84,20 +87,6 @@ const App = () => {
           Made with ❤️ by Iyinoluwa 😏
         </p>
       </div>
-
-      {/* Lightbox */}
-      {lightboxImg && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
-          onClick={() => setLightboxImg(null)}
-        >
-          <img
-            src={lightboxImg}
-            alt="Enlarged"
-            className="max-h-[90%] max-w-[90%] rounded-2xl shadow-2xl"
-          />
-        </div>
-      )}
     </>
   );
 };
